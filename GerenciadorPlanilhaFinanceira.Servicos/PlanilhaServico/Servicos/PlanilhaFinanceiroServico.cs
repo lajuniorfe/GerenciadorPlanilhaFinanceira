@@ -3,6 +3,7 @@ using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
+using System.Globalization;
 using System.Text.Json;
 
 namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
@@ -16,8 +17,10 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
             List<PlanilhaFinanceiroRequest> listaPlanilhaFinanceiroValores = new();
 
             PlanilhaFinanceiroRequest request = new PlanilhaFinanceiroRequest();
+            var culturaBR = new CultureInfo("pt-BR");
+            var data = DateTime.Parse(jsonMensagem.Values[0], culturaBR);
 
-            request.DataCriaçao = Convert.ToDateTime(jsonMensagem.Values[0]);
+            request.DataCriaçao = data;
             request.NomeDespesa = jsonMensagem.Values[1];
             request.Valor = Convert.ToDecimal(jsonMensagem.Values[2]);
             request.TipoDespesa = jsonMensagem.Values[3];
