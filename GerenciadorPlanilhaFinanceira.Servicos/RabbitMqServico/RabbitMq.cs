@@ -43,8 +43,6 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico
                var message = Encoding.UTF8.GetString(body);
                Console.WriteLine($"Mensagem recebida carai: {message}");
 
-               // Envia email
-               enviarEmailServico.EnviarEmailAsync("lajuniorferreira@gmail.com", "Evento na fila RabbitMQ", message);
 
                // Confirma consumo da mensagem
                await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
