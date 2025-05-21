@@ -9,9 +9,9 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.EmailServico
         {
             Console.WriteLine("cheguei aqui enviado!");
 
-            var fromAddress = new MailAddress("lajunior@outlool.com.br", "Sistema Planilha");
+            var fromAddress = new MailAddress("lajunior@outlook.com.br", "Sistema Planilha");
             var toAddress = new MailAddress(para);
-            const string fromPassword = "La130603!";
+            const string fromPassword = "@La130603@";
 
             using var smtp = new SmtpClient
             {
