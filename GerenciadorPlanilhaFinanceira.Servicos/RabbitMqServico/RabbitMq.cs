@@ -24,6 +24,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico
 
         public async Task OuvirFila()
         {
+            var reset = new ManualResetEventSlim(false);
 
             using var connection = await _connectionFactory.CreateConnectionAsync();
             using var channel = await connection.CreateChannelAsync();
@@ -52,6 +53,8 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico
                                   autoAck: false,
                                   consumer: consumer);
 
+            Console.WriteLine("Consumidor está ouvindo a fila...");
+            reset.Wait(); // Mantém o app vivo
         }
     }
 }
