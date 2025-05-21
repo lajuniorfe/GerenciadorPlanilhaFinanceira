@@ -1,12 +1,7 @@
 ﻿using GerenciadorPlanilhaFinanceira.Servicos.EmailServico;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Channels;
-using System.Threading.Tasks;
 
 namespace GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico
 {
@@ -46,10 +41,10 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico
            {
                var body = ea.Body.ToArray();
                var message = Encoding.UTF8.GetString(body);
-               Console.WriteLine($"Mensagem recebida: {message}");
+               Console.WriteLine($"Mensagem recebida carai: {message}");
 
                // Envia email
-               enviarEmailServico.EnviarEmailAsync("destinatario@exemplo.com", "Evento na fila RabbitMQ", message);
+               enviarEmailServico.EnviarEmailAsync("lajuniorferreira@gmail.com", "Evento na fila RabbitMQ", message);
 
                // Confirma consumo da mensagem
                await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
@@ -60,7 +55,6 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico
                                   consumer: consumer);
 
             Console.WriteLine("Esperando mensagens. Pressione [enter] para sair.");
-            Console.ReadLine();
         }
     }
 }
