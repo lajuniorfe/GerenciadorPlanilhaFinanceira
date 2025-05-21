@@ -54,7 +54,6 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico
                                   autoAck: false,
                                   consumer: consumer);
 
-            Console.WriteLine("Esperando mensagens. Pressione [enter] para sair.");
         }
     }
 }

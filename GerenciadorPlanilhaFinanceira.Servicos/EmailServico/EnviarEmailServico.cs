@@ -7,6 +7,8 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.EmailServico
     {
         public void EnviarEmailAsync(string para, string assunto, string corpo)
         {
+            Console.WriteLine("cheguei aqui enviado!");
+
             var fromAddress = new MailAddress("lajunior@outlool.com.br", "Sistema Planilha");
             var toAddress = new MailAddress(para);
             const string fromPassword = "La130603!";
