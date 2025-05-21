@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "GerenciadorPlanilhaFinanceira.Aplicacao": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
