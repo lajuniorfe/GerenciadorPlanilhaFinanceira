@@ -36,7 +36,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
             // alterar a planilha para marcar que foi sincronizada com o banco de dados
             await EditarPlanilha(jsonMensagem.Row, jsonMensagem.Sheet);
 
-
+            Console.WriteLine("deu tudo certo");
         }
 
         public async Task EditarPlanilha(int linha, string pagina)
@@ -62,6 +62,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
             }
             catch (Exception ex)
             {
+                Console.WriteLine("deu tudo errado ", ex);
                 throw;
             }
         }
@@ -73,6 +74,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
             var credential = GoogleCredential.FromFile(credPath)
                                               .CreateScoped(SheetsService.Scope.Spreadsheets);
 
+            Console.WriteLine("o caminho", credPath);
             return credential;
         }
     }
