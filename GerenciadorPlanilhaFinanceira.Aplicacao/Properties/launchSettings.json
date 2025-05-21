@@ -1,10 +1,13 @@
 {
   "profiles": {
     "GerenciadorPlanilhaFinanceira.Aplicacao": {
-      "commandName": "Project"
-    },
-    "Container (Dockerfile)": {
-      "commandName": "Docker"
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      },
+      "Container (Dockerfile)": {
+        "commandName": "Docker"
+      }
     }
   }
 }
