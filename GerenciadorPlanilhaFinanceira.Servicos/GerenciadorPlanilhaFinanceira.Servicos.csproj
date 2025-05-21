@@ -7,8 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Apis.Sheets.v4" Version="1.69.0.3781" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.5" />
     <PackageReference Include="RabbitMQ.Client" Version="7.1.2" />
   </ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\GerenciadorPlanilhaFinanceira.Aplicacao\careful-granite-442820-r3-c34c4c0a85eb.json">
+			<Link>careful-granite-442820-r3-c34c4c0a85eb.json</Link>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

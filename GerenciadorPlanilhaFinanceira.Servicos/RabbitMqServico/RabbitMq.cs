@@ -1,4 +1,6 @@
 ﻿using GerenciadorPlanilhaFinanceira.Servicos.EmailServico;
+using GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos;
+using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
@@ -8,18 +10,21 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico
     public class RabbitMq : IRabbitMq
     {
         private readonly ConnectionFactory _connectionFactory;
-        private readonly IEnviarEmailServico enviarEmailServico;
+        private readonly IConfiguration _configuration;
+        private readonly IPlanilhaFinanceiroServico planilhaFinanceiroServico;
 
-        public RabbitMq(IEnviarEmailServico enviarEmailServico)
+        public RabbitMq(IConfiguration configuration, IPlanilhaFinanceiroServico planilhaFinanceiroServico)
         {
+            _configuration = configuration;
+
             _connectionFactory = new ConnectionFactory()
             {
-                HostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "rabbitmq-fly.internal",
-                Port = int.Parse(Environment.GetEnvironmentVariable("RABBITMQ_PORT") ?? "5672"),
-                UserName = Environment.GetEnvironmentVariable("RABBITMQ_USER") ?? "admin",
-                Password = Environment.GetEnvironmentVariable("RABBITMQ_PASS") ?? "FinanceiroHoot!23"
+                HostName = _configuration["RabbitMQ:Host"],
+                Port = int.Parse(_configuration["RabbitMQ:Port"] ?? "5672"),
+                UserName = _configuration["RabbitMQ:Username"],
+                Password = _configuration["RabbitMQ:Password"]
             };
-            this.enviarEmailServico = enviarEmailServico;
+            this.planilhaFinanceiroServico = planilhaFinanceiroServico;
         }
 
         public async Task OuvirFila()
@@ -42,8 +47,8 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico
            {
                var body = ea.Body.ToArray();
                var message = Encoding.UTF8.GetString(body);
-               Console.WriteLine($"Mensagem recebida carai: {message}");
 
+               planilhaFinanceiroServico.TratarMensagemDespesaRecebida(message);
 
                // Confirma consumo da mensagem
                await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
@@ -53,8 +58,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico
                                   autoAck: false,
                                   consumer: consumer);
 
-            Console.WriteLine("Consumidor está ouvindo a fila...");
-            reset.Wait(); // Mantém o app vivo
+            reset.Wait(); 
         }
     }
 }
