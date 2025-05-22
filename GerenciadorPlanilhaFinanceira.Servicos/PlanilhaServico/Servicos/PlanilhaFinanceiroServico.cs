@@ -1,12 +1,9 @@
 ﻿using GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Entidades;
 using GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Utils;
-using GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
-using System.Globalization;
-using System.Text.Json;
 
 namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
 {
@@ -17,57 +14,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
         {
         }
 
-        public async void TratarMensagemDespesaRecebida(string mensagem)
-        {
-            GoogleSheetFinanceiroRequest jsonMensagem = JsonSerializer.Deserialize<GoogleSheetFinanceiroRequest>(mensagem);
-
-
-            PlanilhaFinanceiroRequest request = new PlanilhaFinanceiroRequest();
-            var culturaBR = new CultureInfo("pt-BR");
-            var data = DateTime.Parse(jsonMensagem.Values[0], culturaBR);
-
-            request.DataCriaçao = data;
-            request.NomeDespesa = jsonMensagem.Values[1];
-            request.Valor = Convert.ToDecimal(jsonMensagem.Values[2]);
-            request.TipoDespesa = jsonMensagem.Values[3];
-            request.Categoria = jsonMensagem.Values[4];
-            request.FormaPagamento = jsonMensagem.Values[5];
-            request.CompraParcelada = jsonMensagem.Values[6] == "Não" ? false : true;
-            request.Parcela = jsonMensagem.Values[7] == "" ? 0 : Convert.ToInt32(jsonMensagem.Values[7]);
-            request.Responsavel = jsonMensagem.Values[8];
-            request.MesRelacionado = jsonMensagem.Values[9];
-            request.Identificador = $"{jsonMensagem.Sheet}| {jsonMensagem.Row}";
-
-            // criar despesas parceladas para cada mes correspondente e gravar na planilha e no banco
-            if (request.CompraParcelada)
-            {
-                await TratarDespesasParceladas(request.Parcela, request);
-            }
-            else
-            {
-                //compa sem parcela
-            }
-
-            //dispara mensagem para persistencia em banco de dados
-            //string jsonRequest = JsonSerializer.Serialize(request);
-            // await rabbitMq.DispararMensagemPersistencia(jsonRequest);
-
-            Console.WriteLine("deu tudo certo");
-        }
-
-        public async Task TratarMensagemPersistenciaRecebidaAsync(string mensagem)
-        {
-            PlanilhaFinanceiroRequest jsonMensagem = JsonSerializer.Deserialize<PlanilhaFinanceiroRequest>(mensagem);
-
-            string[] partes = jsonMensagem.Identificador.Split('|');
-
-            string pagina = partes[0];
-            int linha = Convert.ToInt32(partes[1]);
-
-            await EditarSincronizacaoPlanilha(linha, pagina);
-        }
-
-        private async Task TratarDespesasParceladas(int parcelas, PlanilhaFinanceiroRequest request)
+        public async Task TratarDespesasParceladas(int parcelas, PlanilhaFinanceiroRequest request)
         {
             for (var parcela = 0; parcela < parcelas; parcela++)
             {
@@ -83,6 +30,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
                 }
             }
         }
+                  
 
         private async Task CriarDespesaParceladaPlanilha(PlanilhaFinanceiroRequest request, int parcela, string pagina)
         {
@@ -129,7 +77,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
             }
         }
 
-        private async Task EditarSincronizacaoPlanilha(int linha, string pagina)
+        public async Task EditarSincronizacaoPlanilha(int linha, string pagina)
         {
             try
             {

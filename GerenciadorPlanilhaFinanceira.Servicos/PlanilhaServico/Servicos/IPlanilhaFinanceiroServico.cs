@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Entidades;
 
 namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
 {
     public interface IPlanilhaFinanceiroServico
     {
-        public void TratarMensagemDespesaRecebida(string mensagem);
-        Task TratarMensagemPersistenciaRecebidaAsync(string mensagem);
+        Task TratarDespesasParceladas(int parcelas, PlanilhaFinanceiroRequest request);
+        Task EditarSincronizacaoPlanilha(int linha, string pagina);
     }
 }

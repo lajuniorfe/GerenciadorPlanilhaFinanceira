@@ -1,13 +1,14 @@
-﻿using GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico;
+﻿using GerenciadorPlanilhaFinanceira.Aplicacao.ProducterMessageria.RabbitMqAppServico.Interface;
+using GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico;
 using Microsoft.Extensions.Hosting;
 
 namespace GerenciadorPlanilhaFinanceira.Servicos.Worker
 {
     public class QueueConsumerWorker : BackgroundService
     {
-        private readonly IRabbitMq _rabbitMq;
+        private readonly IRabbitMqAppServico _rabbitMq;
 
-        public QueueConsumerWorker(IRabbitMq rabbitMq)
+        public QueueConsumerWorker(IRabbitMqAppServico rabbitMq)
         {
             _rabbitMq = rabbitMq;
         }
@@ -15,7 +16,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.Worker
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             await _rabbitMq.OuvirFilaPlanilhaFinanceiro();
-           // await _rabbitMq.OuvirFilaPersistencia();
+            await _rabbitMq.OuvirFilaPersistencia();
         }
     }
 }
