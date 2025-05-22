@@ -1,4 +1,4 @@
-﻿using GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Producter.Interface;
+﻿using GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Producer.Interface;
 using GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico.Interface;
 using GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Entidades;
 using GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos;
@@ -12,9 +12,9 @@ namespace GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico
     public class GerenciamentoPlanilhaAppServico : IGerenciamentoAppServico
     {
         private readonly IPlanilhaFinanceiroServico planilhaFinanceiroServico;
-        private readonly IRabbitProducterApp rabbitProducterApp;
+        private readonly IRabbitProducerApp rabbitProducterApp;
 
-        public GerenciamentoPlanilhaAppServico(IPlanilhaFinanceiroServico planilhaFinanceiroServico, IRabbitProducterApp rabbitProducterApp)
+        public GerenciamentoPlanilhaAppServico(IPlanilhaFinanceiroServico planilhaFinanceiroServico, IRabbitProducerApp rabbitProducterApp)
         {
             this.planilhaFinanceiroServico = planilhaFinanceiroServico;
             this.rabbitProducterApp = rabbitProducterApp;
