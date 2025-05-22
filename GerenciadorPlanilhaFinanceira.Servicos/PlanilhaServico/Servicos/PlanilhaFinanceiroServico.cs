@@ -107,7 +107,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
                             request.TipoDespesa,
                             request.Categoria,
                             request.FormaPagamento,
-                            request.DataCriaçao,
+                            request.DataCriaçao.Date,
                             request.CompraParcelada == true? "Sim" : "Não",
                             request.Parcela > 0 ? $"{parcela} de {request.Parcela}" : "",
                             request.Responsavel
