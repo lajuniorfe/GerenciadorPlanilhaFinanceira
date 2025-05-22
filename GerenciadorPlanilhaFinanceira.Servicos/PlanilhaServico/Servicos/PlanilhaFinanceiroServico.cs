@@ -79,8 +79,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
 
                     Console.WriteLine($"Parcela {parcela + 1} será em {mesParcela}");
 
-                    if (parcela + 1 != 1)
-                        await CriarDespesaParceladaPlanilha(request, parcela+1, mesParcela.ToString());
+                    await CriarDespesaParceladaPlanilha(request, parcela + 1, mesParcela.ToString());
                 }
             }
         }
@@ -105,8 +104,8 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
                         new List<object> {
                             request.NomeDespesa,
                             request.Valor,
-                            request.Categoria,
                             request.TipoDespesa,
+                            request.Categoria,
                             request.FormaPagamento,
                             request.DataCriaçao,
                             request.CompraParcelada == true? "Sim" : "Não",
@@ -119,7 +118,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
 
                 var appendRequest = service.Spreadsheets.Values.Append(valueRange, spreadsheetId, range);
                 appendRequest.ValueInputOption = SpreadsheetsResource.ValuesResource.AppendRequest.ValueInputOptionEnum.RAW;
-                
+
                 var result = await appendRequest.ExecuteAsync();
 
             }
