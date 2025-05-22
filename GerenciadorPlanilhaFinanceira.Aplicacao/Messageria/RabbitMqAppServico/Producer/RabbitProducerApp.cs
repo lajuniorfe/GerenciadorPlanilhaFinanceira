@@ -1,23 +1,18 @@
-﻿using GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Producter.Interface;
-using GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico.Interface;
+﻿using GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Producer.Interface;
 using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Producter
+namespace GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Producer
 {
-    public class RabbitProducterApp : IRabbitProducterApp
+    public class RabbitProducerApp : IRabbitProducerApp
     {
         private readonly ConnectionFactory _connectionFactory;
         private readonly IConfiguration _configuration;
-       
+        private IConnection? _connection;
+        private IChannel? _channel;
 
-        public RabbitProducterApp(IConfiguration configuration)
+        public RabbitProducerApp(IConfiguration configuration)
         {
             _configuration = configuration;
             _connectionFactory = new ConnectionFactory()
@@ -28,16 +23,28 @@ namespace GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.
                 Password = _configuration["RabbitMQ:Password"]
             };
         }
+        private async Task AbrirConexao()
+        {
+            if (_connection == null || !_connection.IsOpen)
+            {
+                _connection = await _connectionFactory.CreateConnectionAsync();
+            }
+
+            if (_channel == null || !_channel.IsOpen)
+            {
+                _channel = await _connection.CreateChannelAsync();
+            }
+        }
         public async Task DispararMensagemPersistencia(string mensagem, CancellationToken cancellation = default)
         {
             try
             {
                 string fila = "persistencia-dados-planilha";
-                var connection = await _connectionFactory.CreateConnectionAsync();
-                var channel = await connection.CreateChannelAsync();
-                await channel.QueueDeclareAsync(queue: fila, durable: true, exclusive: false, autoDelete: false, arguments: null);
+
+               
+                await _channel.QueueDeclareAsync(queue: fila, durable: true, exclusive: false, autoDelete: false, arguments: null);
                 var body = Encoding.UTF8.GetBytes(mensagem);
-                await channel.BasicPublishAsync(exchange: "", routingKey: fila, body: body, cancellation);
+                await _channel.BasicPublishAsync(exchange: "", routingKey: fila, body: body, cancellation);
 
                 Console.WriteLine($"Mensagem publicada na fila '{fila}'.");
 

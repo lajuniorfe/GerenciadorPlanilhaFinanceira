@@ -1,8 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Consumer;
 using GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Consumer.Interface;
-using GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Producter;
-using GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Producter.Interface;
+using GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Producer;
+using GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Producer.Interface;
 using GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico;
 using GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico.Interface;
 using GerenciadorPlanilhaFinanceira.Servicos.EmailServico;
@@ -33,7 +33,7 @@ var host = Host.CreateDefaultBuilder(args)
          services.AddSingleton<IPlanilhaFinanceiroServico, PlanilhaFinanceiroServico>();
          services.AddSingleton<IGerenciamentoAppServico, GerenciamentoPlanilhaAppServico>();
          services.AddSingleton<IRabbitConsumerApp,RabbitConsumerApp>();
-         services.AddSingleton<IRabbitProducterApp, RabbitProducterApp>();
+         services.AddSingleton<IRabbitProducerApp, RabbitProducerApp>();
 
          services.AddHostedService<QueueConsumerWorker>();
 
