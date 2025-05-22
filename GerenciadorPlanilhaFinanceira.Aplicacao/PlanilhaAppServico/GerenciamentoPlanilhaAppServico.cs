@@ -1,6 +1,9 @@
-﻿using GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico.Interface;
+﻿using GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Producter.Interface;
+using GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico.Interface;
 using GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Entidades;
 using GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos;
+using Google.Apis.Sheets.v4.Data;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 
@@ -9,13 +12,15 @@ namespace GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico
     public class GerenciamentoPlanilhaAppServico : IGerenciamentoAppServico
     {
         private readonly IPlanilhaFinanceiroServico planilhaFinanceiroServico;
+        private readonly IRabbitProducterApp rabbitProducterApp;
 
-        public GerenciamentoPlanilhaAppServico(IPlanilhaFinanceiroServico planilhaFinanceiroServico)
+        public GerenciamentoPlanilhaAppServico(IPlanilhaFinanceiroServico planilhaFinanceiroServico, IRabbitProducterApp rabbitProducterApp)
         {
             this.planilhaFinanceiroServico = planilhaFinanceiroServico;
+            this.rabbitProducterApp = rabbitProducterApp;
         }
 
-        public async Task TratarMensagemDespesaRecebida(string mensagem)
+        public async Task TratarMensagemDespesaRecebida(string mensagem, CancellationToken cancellationToken)
         {
             GoogleSheetFinanceiroRequest jsonMensagem = JsonSerializer.Deserialize<GoogleSheetFinanceiroRequest>(mensagem);
 
@@ -39,30 +44,39 @@ namespace GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico
             // criar despesas parceladas para cada mes correspondente e gravar na planilha e no banco
             if (request.CompraParcelada)
             {
-                await planilhaFinanceiroServico.TratarDespesasParceladas(request.Parcela, request);
+                List<PersistenciaFinanceiro> retorno = await planilhaFinanceiroServico.TratarDespesasParceladas(request.Parcela, request);
+
+                // publicar em fila de persitencia
+                await rabbitProducterApp.DispararMensagemPersistencia(JsonSerializer.Serialize(retorno), cancellationToken);
+
             }
             else
             {
-                //compa sem parcela
-            }
+                PersistenciaFinanceiro retorno = await planilhaFinanceiroServico.TrataDespesasNaoParceladas(request);
 
-            //dispara mensagem para persistencia em banco de dados
-            //string jsonRequest = JsonSerializer.Serialize(request);
-            // await rabbitMq.DispararMensagemPersistencia(jsonRequest);
+                // publicar em fila de persitencia
+                await rabbitProducterApp.DispararMensagemPersistencia(JsonSerializer.Serialize(retorno), cancellationToken);
+
+            }
 
             Console.WriteLine("deu tudo certo");
         }
 
-        public async Task TratarMensagemPersistenciaRecebidaAsync(string mensagem)
+        public async Task TratarMensagemPersistenciaRecebidaAsync(string mensagem, CancellationToken cancellationToken)
         {
-            PlanilhaFinanceiroRequest jsonMensagem = JsonSerializer.Deserialize<PlanilhaFinanceiroRequest>(mensagem);
+            List<PlanilhaFinanceiroRequest> jsonMensagem = JsonSerializer.Deserialize<List<PlanilhaFinanceiroRequest>>(mensagem);
 
-            string[] partes = jsonMensagem.Identificador.Split('|');
+            foreach(var i in jsonMensagem)
+            {
+                string[] partes = i.Identificador.Split('|');
 
-            string pagina = partes[0];
-            int linha = Convert.ToInt32(partes[1]);
+                string pagina = partes[0];
+                int linha = Convert.ToInt32(partes[1]);
 
-            await planilhaFinanceiroServico.EditarSincronizacaoPlanilha(linha, pagina);
+                string identificadorLinha = pagina == "Respostas ao formulário 1" ? "K" : "J";
+
+                await planilhaFinanceiroServico.EditarSincronizacaoPlanilha(linha, pagina, identificadorLinha);
+            }
         }
     }
 }

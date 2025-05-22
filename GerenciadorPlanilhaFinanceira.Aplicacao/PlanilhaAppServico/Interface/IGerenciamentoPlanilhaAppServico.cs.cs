@@ -8,7 +8,7 @@ namespace GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico.Interface
 {
     public interface IGerenciamentoAppServico
     {
-        Task TratarMensagemDespesaRecebida(string mensagem);
-        Task TratarMensagemPersistenciaRecebidaAsync(string mensagem);
+        Task TratarMensagemDespesaRecebida(string mensagem, CancellationToken cancellationToken);
+        Task TratarMensagemPersistenciaRecebidaAsync(string mensagem, CancellationToken cancellationToken);
     }
 }

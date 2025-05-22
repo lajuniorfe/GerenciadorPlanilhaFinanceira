@@ -1,4 +1,10 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Consumer;
+using GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Consumer.Interface;
+using GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Producter;
+using GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Producter.Interface;
+using GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico;
+using GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico.Interface;
 using GerenciadorPlanilhaFinanceira.Servicos.EmailServico;
 using GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos;
 using GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico;
@@ -7,7 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-string environment = "Production"; //"Production"; // ou "Development"
+string environment = "Development"; //"Production"; // ou "Development"
 
 var host = Host.CreateDefaultBuilder(args)
      .ConfigureAppConfiguration((hostingContext, config) =>
@@ -25,11 +31,15 @@ var host = Host.CreateDefaultBuilder(args)
          services.AddSingleton<IRabbitMq, RabbitMq>();
          services.AddSingleton<IEnviarEmailServico, EnviarEmailServico>();
          services.AddSingleton<IPlanilhaFinanceiroServico, PlanilhaFinanceiroServico>();
+         services.AddSingleton<IGerenciamentoAppServico, GerenciamentoPlanilhaAppServico>();
+         services.AddSingleton<IRabbitConsumerApp,RabbitConsumerApp>();
+         services.AddSingleton<IRabbitProducterApp, RabbitProducterApp>();
 
          services.AddHostedService<QueueConsumerWorker>();
 
      })
     .Build();
+
 
 await host.RunAsync();
 

@@ -10,12 +10,26 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
     public class PlanilhaFinanceiroServico : IPlanilhaFinanceiroServico
     {
 
-        public PlanilhaFinanceiroServico()
+        public async Task<PersistenciaFinanceiro> TrataDespesasNaoParceladas(PlanilhaFinanceiroRequest request)
         {
+            if (Enum.TryParse<MesesEnum>(request.MesRelacionado, ignoreCase: true, out var mesEnum))
+            {
+                Console.WriteLine($"Compra será em {request.MesRelacionado}");
+
+                PersistenciaFinanceiro persistencia = PopularDespesa(request, 0);
+
+                await CriarDespesaPlanilha(request, 0, request.MesRelacionado);
+
+                return persistencia;
+            }
+
+            return null;
         }
 
-        public async Task TratarDespesasParceladas(int parcelas, PlanilhaFinanceiroRequest request)
+        public async Task<List<PersistenciaFinanceiro>> TratarDespesasParceladas(int parcelas, PlanilhaFinanceiroRequest request)
         {
+            List<PersistenciaFinanceiro> listaPersistencia = new();
+
             for (var parcela = 0; parcela < parcelas; parcela++)
             {
                 if (Enum.TryParse<MesesEnum>(request.MesRelacionado, ignoreCase: true, out var mesEnum))
@@ -26,13 +40,35 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
 
                     Console.WriteLine($"Parcela {parcela + 1} será em {mesParcela}");
 
-                    await CriarDespesaParceladaPlanilha(request, parcela + 1, mesParcela.ToString());
+                    PersistenciaFinanceiro persistencia = PopularDespesa(request, parcela + 1);
+
+                    listaPersistencia.Add(persistencia);
+
+                    await CriarDespesaPlanilha(request, parcela + 1, mesParcela.ToString());
                 }
             }
-        }
-                  
 
-        private async Task CriarDespesaParceladaPlanilha(PlanilhaFinanceiroRequest request, int parcela, string pagina)
+            return listaPersistencia;
+        }
+              
+        private PersistenciaFinanceiro PopularDespesa(PlanilhaFinanceiroRequest request, int parcela)
+        {
+            PersistenciaFinanceiro persistencia = new();
+            persistencia.NomeDespesa = request.NomeDespesa;
+            persistencia.TipoDespesa = request.TipoDespesa;
+            persistencia.MesRelacionado = request.MesRelacionado;
+            persistencia.Responsavel = request.Responsavel;
+            persistencia.Categoria = request.Categoria;
+            persistencia.DataCriaçao = request.DataCriaçao;
+            persistencia.FormaPagamento = request.FormaPagamento;
+            persistencia.Identificador = request.Identificador;
+            persistencia.Valor = request.Valor;
+            persistencia.Parcela = parcela;
+
+            return persistencia;
+        }
+
+        private async Task CriarDespesaPlanilha(PlanilhaFinanceiroRequest request, int parcela, string pagina)
         {
             try
             {
@@ -59,7 +95,6 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
                             request.Parcela > 0 ? $"{parcela} de {request.Parcela}" : "",
                             request.Responsavel,
                             request.DataCriaçao.Date
-
                         }
                     }
                 };
@@ -77,7 +112,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
             }
         }
 
-        public async Task EditarSincronizacaoPlanilha(int linha, string pagina)
+        public async Task EditarSincronizacaoPlanilha(int linha, string pagina, string identificadoLinha)
         {
             try
             {
@@ -88,7 +123,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
                 });
 
                 string spreadsheetId = "10lsLAVdVqRoRN9ezDKvyvIcycReIcXfNIzZZ-Jx9aoQ";
-                string range = $"{pagina}!K{linha}";
+                string range = $"{pagina}!{identificadoLinha}{linha}";
                 var valueRange = new ValueRange
                 {
                     Values = new List<IList<object>> { new List<object> { "Sim" } }
@@ -109,8 +144,10 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
         {
             var credPath = Path.Combine(AppContext.BaseDirectory, "careful-granite-442820-r3-c34c4c0a85eb.json");
 
-            var credential = GoogleCredential.FromFile(credPath)
-                                              .CreateScoped(SheetsService.Scope.Spreadsheets);
+            var credential = GoogleCredential
+                .FromFile(credPath)
+                .CreateScoped(SheetsService.Scope.Spreadsheets);
+
             return credential;
         }
     }
