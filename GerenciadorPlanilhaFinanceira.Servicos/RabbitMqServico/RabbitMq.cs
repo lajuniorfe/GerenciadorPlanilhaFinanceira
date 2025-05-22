@@ -1,9 +1,9 @@
-﻿using GerenciadorPlanilhaFinanceira.Servicos.EmailServico;
-using GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos;
+﻿using GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos;
 using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
+using System.Text.Json;
 
 namespace GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico
 {
@@ -27,7 +27,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico
             this.planilhaFinanceiroServico = planilhaFinanceiroServico;
         }
 
-        public async Task OuvirFila()
+        public async Task OuvirFilaPlanilhaFinanceiro()
         {
             var reset = new ManualResetEventSlim(false);
 
@@ -36,29 +36,79 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico
 
             string queueName = "planilha-financeiro";
 
+            await channel
+                .QueueDeclareAsync(queue: queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
+
+            var consumer = new AsyncEventingBasicConsumer(channel);
+            consumer.ReceivedAsync += async (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+
+                planilhaFinanceiroServico.TratarMensagemDespesaRecebida(message);
+
+                await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
+            };
+
+            await channel.BasicConsumeAsync(queue: queueName, autoAck: false, consumer: consumer);
+
+            reset.Wait();
+        }
+
+        public async Task OuvirFilaPersistencia()
+        {
+            var reset = new ManualResetEventSlim(false);
+            using var connection = await _connectionFactory.CreateConnectionAsync();
+            using var channel = await connection.CreateChannelAsync();
+
+            string queueName = "persistencia-financeiro";
+
+
             await channel.QueueDeclareAsync(queue: queueName,
                               durable: true,
                               exclusive: false,
                               autoDelete: false,
-             arguments: null);
+                              arguments: null
+            );
+
 
             var consumer = new AsyncEventingBasicConsumer(channel);
             consumer.ReceivedAsync += async (model, ea) =>
-           {
-               var body = ea.Body.ToArray();
-               var message = Encoding.UTF8.GetString(body);
+            {
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
 
-               planilhaFinanceiroServico.TratarMensagemDespesaRecebida(message);
+                await planilhaFinanceiroServico.TratarMensagemPersistenciaRecebidaAsync(message);
 
-               // Confirma consumo da mensagem
-               await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
-           };
+                await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
+            };
 
             await channel.BasicConsumeAsync(queue: queueName,
                                   autoAck: false,
                                   consumer: consumer);
 
-            reset.Wait(); 
+            reset.Wait();
+
         }
+        //public async Task DispararMensagemPersistencia(string mensagem, CancellationToken cancellation = default)
+        //{
+        //    try
+        //    {
+        //        string fila = "persistencia-dados-planilha";
+        //        var connection = await _connectionFactory.CreateConnectionAsync();
+        //        var channel = await connection.CreateChannelAsync();
+        //        await channel.QueueDeclareAsync(queue: fila, durable: true, exclusive: false, autoDelete: false, arguments: null);
+        //        var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(mensagem));
+        //        await channel.BasicPublishAsync(exchange: "", routingKey: fila, body: body, cancellation);
+
+        //        Console.WriteLine($"Mensagem publicada na fila '{fila}'.");
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
     }
 }
+

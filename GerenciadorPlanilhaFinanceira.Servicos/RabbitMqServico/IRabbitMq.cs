@@ -8,6 +8,8 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico
 {
     public interface IRabbitMq
     {
-        Task OuvirFila();
+        Task OuvirFilaPlanilhaFinanceiro();
+        Task OuvirFilaPersistencia();
+      //  Task DispararMensagemPersistencia(string mensagem, CancellationToken cancellation = default);
     }
 }

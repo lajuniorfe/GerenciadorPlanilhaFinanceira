@@ -1,11 +1,5 @@
 ﻿using GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico;
 using Microsoft.Extensions.Hosting;
-using RabbitMQ.Client.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GerenciadorPlanilhaFinanceira.Servicos.Worker
 {
@@ -20,7 +14,8 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.Worker
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await _rabbitMq.OuvirFila();
+            await _rabbitMq.OuvirFilaPlanilhaFinanceiro();
+           // await _rabbitMq.OuvirFilaPersistencia();
         }
     }
 }

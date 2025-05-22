@@ -18,6 +18,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Entidades
         public int Parcela {  get; set; }
         public string Responsavel { get; set; }
         public string MesRelacionado { get; set; }
+        public string Identificador {  get; set; }
     }
 
     public class GoogleSheetFinanceiroRequest

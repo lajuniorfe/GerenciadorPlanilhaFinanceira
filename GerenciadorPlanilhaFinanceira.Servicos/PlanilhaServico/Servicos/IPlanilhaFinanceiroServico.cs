@@ -9,6 +9,6 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
     public interface IPlanilhaFinanceiroServico
     {
         public void TratarMensagemDespesaRecebida(string mensagem);
-        Task EditarPlanilha(int linha, string pagina);
+        Task TratarMensagemPersistenciaRecebidaAsync(string mensagem);
     }
 }
