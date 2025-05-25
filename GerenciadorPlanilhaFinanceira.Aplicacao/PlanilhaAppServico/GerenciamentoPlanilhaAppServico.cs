@@ -2,8 +2,6 @@
 using GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico.Interface;
 using GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Entidades;
 using GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos;
-using Google.Apis.Sheets.v4.Data;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 
@@ -23,7 +21,6 @@ namespace GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico
         public async Task TratarMensagemDespesaRecebida(string mensagem, CancellationToken cancellationToken)
         {
             GoogleSheetFinanceiroRequest jsonMensagem = JsonSerializer.Deserialize<GoogleSheetFinanceiroRequest>(mensagem);
-
 
             PlanilhaFinanceiroRequest request = new PlanilhaFinanceiroRequest();
             var culturaBR = new CultureInfo("pt-BR");
