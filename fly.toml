@@ -7,7 +7,7 @@ app = 'gerenciadorplanilhafinanceira'
 primary_region = 'gru'
 
 [build]
-  dockerfile = "GerenciadorPlanilhaFinanceira.Apicacao/Dockerfile" # ← caminho relativo
+  dockerfile = "GerenciadorPlanilhaFinanceira.Aplicacao/Dockerfile" # ← caminho relativo
   context    = "."  
   
 [processes]
