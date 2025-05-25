@@ -6,6 +6,10 @@
 app = 'gerenciadorplanilhafinanceira'
 primary_region = 'gru'
 
+[build]
+  dockerfile = "GerenciadorPlanilhaFinanceira.Apicacao/Dockerfile" # ← caminho relativo
+  context    = "."  
+  
 [processes]
 worker = "dotnet GerenciadorPlanilhaFinanceira.dll"
 
