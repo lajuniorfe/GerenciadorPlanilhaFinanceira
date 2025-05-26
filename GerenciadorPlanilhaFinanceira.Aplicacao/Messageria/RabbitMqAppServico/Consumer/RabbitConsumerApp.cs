@@ -67,7 +67,7 @@ namespace GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.
 
             await _channel.BasicConsumeAsync(queue: queueName, autoAck: false, consumer: consumer);
 
-            await Task.Delay(Timeout.Infinite, cancellationToken);
+           
         }
 
         public async Task OuvirFilaPersistencia(CancellationToken cancellationToken)
@@ -99,7 +99,7 @@ namespace GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.
                                   autoAck: false,
                                   consumer: consumer);
 
-            await Task.Delay(Timeout.Infinite, cancellationToken);
+           
 
         }
     }

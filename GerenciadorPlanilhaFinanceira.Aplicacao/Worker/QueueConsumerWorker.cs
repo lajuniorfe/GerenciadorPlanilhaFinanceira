@@ -1,5 +1,4 @@
 ﻿using GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Consumer.Interface;
-using GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico;
 using Microsoft.Extensions.Hosting;
 
 namespace GerenciadorPlanilhaFinanceira.Servicos.Worker

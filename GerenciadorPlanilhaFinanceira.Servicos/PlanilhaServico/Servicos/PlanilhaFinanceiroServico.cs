@@ -59,7 +59,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
             persistencia.MesRelacionado = request.MesRelacionado;
             persistencia.Responsavel = request.Responsavel;
             persistencia.Categoria = request.Categoria;
-            persistencia.DataCriaçao = request.DataCriaçao;
+            persistencia.DataCriacao = request.DataCriacao;
             persistencia.FormaPagamento = request.FormaPagamento;
             persistencia.Identificador = request.Identificador;
             persistencia.Valor = request.Valor;
@@ -94,7 +94,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
                             request.CompraParcelada == true? "Sim" : "Não",
                             request.Parcela > 0 ? $"{parcela} de {request.Parcela}" : "",
                             request.Responsavel,
-                            request.DataCriaçao.Date
+                            request.DataCriacao.Date
                         }
                     }
                 };

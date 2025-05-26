@@ -8,7 +8,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Entidades
 {
     public class PlanilhaFinanceiroRequest
     {
-        public DateTime DataCriaçao { get; set; }
+        public DateTime DataCriacao { get; set; }
         public string NomeDespesa { get; set; }
         public decimal Valor { get; set; }
         public string TipoDespesa { get; set; }

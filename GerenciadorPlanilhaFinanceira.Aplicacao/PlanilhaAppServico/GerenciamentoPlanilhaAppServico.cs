@@ -26,7 +26,7 @@ namespace GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico
             var culturaBR = new CultureInfo("pt-BR");
             var data = DateTime.Parse(jsonMensagem.Values[0], culturaBR);
 
-            request.DataCriaçao = data;
+            request.DataCriacao = data;
             request.NomeDespesa = jsonMensagem.Values[1];
             request.Valor = Convert.ToDecimal(jsonMensagem.Values[2]);
             request.TipoDespesa = jsonMensagem.Values[3];
@@ -51,7 +51,6 @@ namespace GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico
             {
                 PersistenciaFinanceiro retorno = await planilhaFinanceiroServico.TrataDespesasNaoParceladas(request);
 
-                // publicar em fila de persitencia
                 await rabbitProducterApp.DispararMensagemPersistencia(JsonSerializer.Serialize(retorno), cancellationToken);
 
             }
@@ -61,19 +60,14 @@ namespace GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico
 
         public async Task TratarMensagemPersistenciaRecebidaAsync(string mensagem, CancellationToken cancellationToken)
         {
-            List<PlanilhaFinanceiroRequest> jsonMensagem = JsonSerializer.Deserialize<List<PlanilhaFinanceiroRequest>>(mensagem);
+            string[] partes = mensagem.Split('|');
 
-            foreach(var i in jsonMensagem)
-            {
-                string[] partes = i.Identificador.Split('|');
+            string pagina = partes[0];
+            int linha = Convert.ToInt32(partes[1]);
 
-                string pagina = partes[0];
-                int linha = Convert.ToInt32(partes[1]);
+            string identificadorLinha = pagina == "Respostas ao formulário 1" ? "K" : "J";
 
-                string identificadorLinha = pagina == "Respostas ao formulário 1" ? "K" : "J";
-
-                await planilhaFinanceiroServico.EditarSincronizacaoPlanilha(linha, pagina, identificadorLinha);
-            }
+            await planilhaFinanceiroServico.EditarSincronizacaoPlanilha(linha, pagina, identificadorLinha);
         }
     }
 }

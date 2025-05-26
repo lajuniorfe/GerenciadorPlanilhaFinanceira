@@ -39,6 +39,8 @@ namespace GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.
         {
             try
             {
+                await AbrirConexao();
+
                 string fila = "persistencia-dados-planilha";
                
                 await _channel.QueueDeclareAsync(queue: fila, durable: true, exclusive: false, autoDelete: false, arguments: null);
