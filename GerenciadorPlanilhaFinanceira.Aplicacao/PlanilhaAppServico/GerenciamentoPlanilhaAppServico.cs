@@ -28,7 +28,17 @@ namespace GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico
 
             request.DataCriacao = data;
             request.NomeDespesa = jsonMensagem.Values[1];
-            request.Valor = Convert.ToDecimal(jsonMensagem.Values[2]);
+            string valorString = jsonMensagem.Values[2];
+            if (valorString.Contains(',') && valorString.Contains('.'))
+            {
+                valorString = valorString.Replace(".", "").Replace(",", ".");
+            }
+            else if (valorString.Contains(','))
+            {
+                valorString = valorString.Replace(',', '.');
+            }
+
+            request.Valor = Convert.ToDecimal(valorString, CultureInfo.InvariantCulture);
             request.TipoDespesa = jsonMensagem.Values[3];
             request.Categoria = jsonMensagem.Values[4];
             request.FormaPagamento = jsonMensagem.Values[5];
@@ -55,7 +65,6 @@ namespace GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico
 
             }
 
-            Console.WriteLine("deu tudo certo");
         }
 
         public async Task TratarMensagemPersistenciaRecebidaAsync(string mensagem, CancellationToken cancellationToken)

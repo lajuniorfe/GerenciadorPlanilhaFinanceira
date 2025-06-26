@@ -38,8 +38,6 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
 
                     MesesEnum mesParcela = (MesesEnum)mesAtual;
 
-                    Console.WriteLine($"Parcela {parcela + 1} será em {mesParcela}");
-
                     PersistenciaFinanceiro persistencia = PopularDespesa(request, parcela + 1);
 
                     listaPersistencia.Add(persistencia);
@@ -80,6 +78,8 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
 
                 string spreadsheetId = "10lsLAVdVqRoRN9ezDKvyvIcycReIcXfNIzZZ-Jx9aoQ";
                 string range = $"{pagina}!A1";
+
+
 
                 var valueRange = new ValueRange
                 {
