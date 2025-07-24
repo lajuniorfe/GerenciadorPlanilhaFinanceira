@@ -14,8 +14,6 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
         {
             if (Enum.TryParse<MesesEnum>(request.MesRelacionado, ignoreCase: true, out var mesEnum))
             {
-                Console.WriteLine($"Compra será em {request.MesRelacionado}");
-
                 PersistenciaFinanceiro persistencia = PopularDespesa(request, 0);
 
                 await CriarDespesaPlanilha(request, 0, request.MesRelacionado);

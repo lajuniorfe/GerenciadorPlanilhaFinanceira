@@ -21,10 +21,7 @@ namespace GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.
 
             _connectionFactory = new ConnectionFactory()
             {
-                HostName = _configuration["RabbitMQ:Host"],
-                Port = int.Parse(_configuration["RabbitMQ:Port"] ?? "5672"),
-                UserName = _configuration["RabbitMQ:Username"],
-                Password = _configuration["RabbitMQ:Password"]
+                Uri = new Uri(_configuration["RabittOnline:Url"])
             };
 
 
