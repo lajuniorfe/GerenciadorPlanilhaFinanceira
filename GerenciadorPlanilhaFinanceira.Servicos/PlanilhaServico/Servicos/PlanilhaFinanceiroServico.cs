@@ -149,19 +149,26 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
 
         private GoogleCredential BuscarArquivoCredencial()
         {
-            var json = _configuration["GOOGLE_CREDENTIALS_JSON"];
-            Console.WriteLine("eu estou testando", json);
+            try
+            {
+                var json = _configuration["GOOGLE_CREDENTIALS_JSON"];
+                Console.WriteLine("eu estou testando", json);
 
-            if (string.IsNullOrWhiteSpace(json))
-                throw new Exception("Variável de ambiente GOOGLE_CREDENTIALS_JSON não encontrada.");
+                if (string.IsNullOrWhiteSpace(json))
+                    throw new Exception("Variável de ambiente GOOGLE_CREDENTIALS_JSON não encontrada.");
 
-            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
+                using var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
 
-            var credential = GoogleCredential
-                .FromStream(stream)
-                .CreateScoped(SheetsService.Scope.Spreadsheets);
+                var credential = GoogleCredential
+                    .FromStream(stream)
+                    .CreateScoped(SheetsService.Scope.Spreadsheets);
 
-            return credential;
+                return credential;
+            }catch(Exception ex)
+            {
+                throw ex;
+            }
+           
         }
     }
 }
