@@ -150,6 +150,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
         private GoogleCredential BuscarArquivoCredencial()
         {
             var json = _configuration["GOOGLE_CREDENTIALS_JSON"];
+            Console.WriteLine("eu estou testando", json);
 
             if (string.IsNullOrWhiteSpace(json))
                 throw new Exception("Variável de ambiente GOOGLE_CREDENTIALS_JSON não encontrada.");
