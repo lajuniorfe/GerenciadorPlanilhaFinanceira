@@ -4,6 +4,7 @@ using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
+using System.Text;
 
 namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
 {
@@ -140,10 +141,15 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
 
         private GoogleCredential BuscarArquivoCredencial()
         {
-            var credPath = Path.Combine(AppContext.BaseDirectory, "careful-granite-442820-r3-c34c4c0a85eb.json");
+            var json = Environment.GetEnvironmentVariable("GOOGLE_CREDENTIALS_JSON");
+
+            if (string.IsNullOrWhiteSpace(json))
+                throw new Exception("Variável de ambiente GOOGLE_CREDENTIALS_JSON não encontrada.");
+
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
 
             var credential = GoogleCredential
-                .FromFile(credPath)
+                .FromStream(stream)
                 .CreateScoped(SheetsService.Scope.Spreadsheets);
 
             return credential;
