@@ -1,7 +1,7 @@
 ﻿using GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Consumer.Interface;
 using Microsoft.Extensions.Hosting;
 
-namespace GerenciadorPlanilhaFinanceira.Servicos.Worker
+namespace GerenciadorPlanilhaFinanceira.Aplicacao.Worker
 {
     public class QueueConsumerWorker : BackgroundService
     {

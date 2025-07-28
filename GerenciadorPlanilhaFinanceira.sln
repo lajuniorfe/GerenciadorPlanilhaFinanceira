@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GerenciadorPlanilhaFinanceira.Servicos", "GerenciadorPlanilhaFinanceira.Servicos\GerenciadorPlanilhaFinanceira.Servicos.csproj", "{028F433F-D149-4D1E-8067-759CBB4E7D57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GerenciadorPlanilhaFinanceira.Servicos", "GerenciadorPlanilhaFinanceira.Servicos\GerenciadorPlanilhaFinanceira.Servicos.csproj", "{028F433F-D149-4D1E-8067-759CBB4E7D57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GerenciadorPlanilhaFinanceira.Aplicacao", "GerenciadorPlanilhaFinanceira.Aplicacao\GerenciadorPlanilhaFinanceira.Aplicacao.csproj", "{9BDB3037-EB8F-41E0-8C37-5A1CF86137F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GerenciadorPlanilhaFinanceira.Aplicacao", "GerenciadorPlanilhaFinanceira.Aplicacao\GerenciadorPlanilhaFinanceira.Aplicacao.csproj", "{9BDB3037-EB8F-41E0-8C37-5A1CF86137F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GerenciadorPlanilhaFinanceira.Api", "GerenciadorPlanilhaFinanceira.Api\GerenciadorPlanilhaFinanceira.Api.csproj", "{59F7E46F-305A-403E-AAE2-86D0551BCD7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{9BDB3037-EB8F-41E0-8C37-5A1CF86137F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BDB3037-EB8F-41E0-8C37-5A1CF86137F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BDB3037-EB8F-41E0-8C37-5A1CF86137F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59F7E46F-305A-403E-AAE2-86D0551BCD7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59F7E46F-305A-403E-AAE2-86D0551BCD7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59F7E46F-305A-403E-AAE2-86D0551BCD7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59F7E46F-305A-403E-AAE2-86D0551BCD7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

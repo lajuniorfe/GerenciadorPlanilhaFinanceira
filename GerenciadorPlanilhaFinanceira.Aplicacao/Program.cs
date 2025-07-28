@@ -5,10 +5,10 @@ using GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Prod
 using GerenciadorPlanilhaFinanceira.Aplicacao.Messageria.RabbitMqAppServico.Producer.Interface;
 using GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico;
 using GerenciadorPlanilhaFinanceira.Aplicacao.PlanilhaAppServico.Interface;
+using GerenciadorPlanilhaFinanceira.Aplicacao.Worker;
 using GerenciadorPlanilhaFinanceira.Servicos.EmailServico;
 using GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos;
 using GerenciadorPlanilhaFinanceira.Servicos.RabbitMqServico;
-using GerenciadorPlanilhaFinanceira.Servicos.Worker;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -39,8 +39,8 @@ var host = Host.CreateDefaultBuilder(args)
          services.AddHostedService<QueueConsumerWorker>();
 
      })
-    .Build();
 
+    .Build();
 
 await host.RunAsync();
 
