@@ -16,7 +16,6 @@ namespace GerenciadorPlanilhaFinanceira.Aplicacao.Worker
         {
             await _rabbitMq.OuvirFilaPlanilhaFinanceiro(stoppingToken);
             await _rabbitMq.OuvirFilaPersistencia(stoppingToken);
-            Console.WriteLine("testando");
         }
     }
 }

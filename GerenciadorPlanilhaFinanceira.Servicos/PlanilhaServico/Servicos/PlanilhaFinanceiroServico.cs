@@ -86,7 +86,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
                 string spreadsheetId = "10lsLAVdVqRoRN9ezDKvyvIcycReIcXfNIzZZ-Jx9aoQ";
                 string range = $"{pagina}!A1";
 
-
+                Console.WriteLine("passei da credencial");
 
                 var valueRange = new ValueRange
                 {
