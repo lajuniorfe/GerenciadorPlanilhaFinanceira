@@ -55,7 +55,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
 
             return listaPersistencia;
         }
-              
+
         private PersistenciaFinanceiro PopularDespesa(PlanilhaFinanceiroRequest request, int parcela)
         {
             PersistenciaFinanceiro persistencia = new();
@@ -86,8 +86,6 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
                 string spreadsheetId = "10lsLAVdVqRoRN9ezDKvyvIcycReIcXfNIzZZ-Jx9aoQ";
                 string range = $"{pagina}!A1";
 
-                Console.WriteLine("passei da credencial");
-
                 var valueRange = new ValueRange
                 {
                     Values = new List<IList<object>>
@@ -114,8 +112,6 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
             }
             catch (Exception ex)
             {
-                Console.WriteLine("deu erro ao criar: " + ex);
-
                 throw;
             }
         }
@@ -143,7 +139,6 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
             }
             catch (Exception ex)
             {
-                Console.WriteLine("deu tudo errado " + ex);
                 throw;
             }
         }
@@ -153,7 +148,6 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
             try
             {
                 var json = _configuration["GOOGLE_CREDENTIALS_JSON"];
-                Console.WriteLine("eu estou testando " + json);
 
                 if (string.IsNullOrWhiteSpace(json))
                     throw new Exception("Variável de ambiente GOOGLE_CREDENTIALS_JSON não encontrada.");
@@ -165,11 +159,12 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
                     .CreateScoped(SheetsService.Scope.Spreadsheets);
 
                 return credential;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
-           
+
         }
     }
 }
