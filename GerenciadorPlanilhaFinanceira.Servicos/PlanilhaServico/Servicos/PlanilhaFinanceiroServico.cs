@@ -114,7 +114,8 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
             }
             catch (Exception ex)
             {
-                Console.WriteLine("deu erro ao criar ", ex);
+                Console.WriteLine("deu erro ao criar: " + ex);
+
                 throw;
             }
         }
@@ -142,7 +143,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
             }
             catch (Exception ex)
             {
-                Console.WriteLine("deu tudo errado ", ex);
+                Console.WriteLine("deu tudo errado " + ex);
                 throw;
             }
         }
@@ -152,7 +153,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
             try
             {
                 var json = _configuration["GOOGLE_CREDENTIALS_JSON"];
-                Console.WriteLine("eu estou testando", json);
+                Console.WriteLine("eu estou testando " + json);
 
                 if (string.IsNullOrWhiteSpace(json))
                     throw new Exception("Variável de ambiente GOOGLE_CREDENTIALS_JSON não encontrada.");
