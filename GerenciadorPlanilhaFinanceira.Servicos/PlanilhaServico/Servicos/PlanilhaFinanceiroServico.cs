@@ -4,12 +4,20 @@ using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using System.Text;
 
 namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
 {
     public class PlanilhaFinanceiroServico : IPlanilhaFinanceiroServico
     {
+        private readonly IConfiguration _configuration;
+
+        public PlanilhaFinanceiroServico(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         public async Task<PersistenciaFinanceiro> TrataDespesasNaoParceladas(PlanilhaFinanceiroRequest request)
         {
@@ -141,7 +149,7 @@ namespace GerenciadorPlanilhaFinanceira.Servicos.PlanilhaServico.Servicos
 
         private GoogleCredential BuscarArquivoCredencial()
         {
-            var json = Environment.GetEnvironmentVariable("GOOGLE_CREDENTIALS_JSON");
+            var json = _configuration["GOOGLE_CREDENTIALS_JSON"];
 
             if (string.IsNullOrWhiteSpace(json))
                 throw new Exception("Variável de ambiente GOOGLE_CREDENTIALS_JSON não encontrada.");

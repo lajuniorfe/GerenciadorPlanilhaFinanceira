@@ -13,7 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-string environment = "Development"; //"Production"; // ou "Development"
+string environment = "Production"; //"Production"; // ou "Development"
 
 var host = Host.CreateDefaultBuilder(args)
      .ConfigureAppConfiguration((hostingContext, config) =>
@@ -23,7 +23,8 @@ var host = Host.CreateDefaultBuilder(args)
 
          // Carrega os arquivos de configuração conforme a variável manual
          config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-               .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true);
+               .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
+               .AddUserSecrets<Program>();
      })
      .ConfigureServices((_, services) =>
      {
